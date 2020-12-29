@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-import static util.CertificateCreator.selfSignedCert;
+import static util.CertificateCreatorUtil.selfSignedCert;
 
 public class CertificateCreatorTest {
 

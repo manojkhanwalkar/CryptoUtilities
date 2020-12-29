@@ -20,11 +20,13 @@ import java.security.cert.X509Certificate;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CertificateCreator {
+public class CertificateCreatorUtil {
 
     /*
     For supported algorithms , look for the list in DefaultSignatureAlgorithmIdentifierFinder of the BouncyCastle library.
      */
+
+    final static String BasicConstraints = "2.5.29.19";
 
     public static Certificate selfSignedCert(KeyPair keyPair, String subjectDN, String signatureAlgorithm, int validityinYears) throws OperatorCreationException, CertificateException, IOException
     {
@@ -48,11 +50,10 @@ public class CertificateCreator {
 
         JcaX509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(dnName, certSerialNumber, startDate, endDate, dnName, keyPair.getPublic());
 
-        BasicConstraints basicConstraints = new BasicConstraints(true); // <-- true for CA, false for EndEntity
+        BasicConstraints basicConstraints = new BasicConstraints(true);
 
-        certBuilder.addExtension(new ASN1ObjectIdentifier("2.5.29.19"), true, basicConstraints); // Basic Constraints is usually marked as critical.
+        certBuilder.addExtension(new ASN1ObjectIdentifier(BasicConstraints), true, basicConstraints);
 
-        // -------------------------------------
 
         return new JcaX509CertificateConverter().setProvider(bcProvider).getCertificate(certBuilder.build(contentSigner));
     }
