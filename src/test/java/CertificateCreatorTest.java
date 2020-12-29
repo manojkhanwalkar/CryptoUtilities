@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-import static util.CertificateCreatorUtil.selfSignedCert;
+import static util.CertificateCreatorUtil.*;
 
 public class CertificateCreatorTest {
 
@@ -32,11 +32,13 @@ public class CertificateCreatorTest {
             KeyPairGenerator g = KeyPairGenerator.getInstance("RSA");
             KeyPair keypair = g.generateKeyPair();
             String signatureAlgorithm = "SHA512WithRSA";
-
-
             X509Certificate certificate = (X509Certificate) selfSignedCert(keypair, "cn=Test", signatureAlgorithm,3);
+            writeCertToFile(certificate,"/tmp/cert");
+
+            certificate = readCertFromFile("/tmp/cert");
 
             System.out.println(certificate);
+
         }
     }
 
