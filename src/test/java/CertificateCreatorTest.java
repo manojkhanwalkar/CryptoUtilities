@@ -13,6 +13,7 @@ import java.security.cert.X509Certificate;
 
 import static util.CertUtil.getCertificate;
 import static util.CertificateCreatorUtil.*;
+import static util.JSONUtil.filePath;
 
 public class CertificateCreatorTest {
 
@@ -46,12 +47,7 @@ public class CertificateCreatorTest {
         }
     }
 
-    private String filePath(String fileName)
-    {
-        URL resource = Resources.getResource(fileName);
-        return resource.getPath();
 
-    }
 
     @Test
     public void testCertChainValidation()

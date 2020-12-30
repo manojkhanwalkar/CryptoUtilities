@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.common.io.Resources;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class JSONUtil {
 
@@ -18,6 +20,13 @@ public class JSONUtil {
         mapper.enableDefaultTyping();
         mapper.configure(MapperFeature.USE_GETTERS_AS_SETTERS, false);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    }
+
+    public static String filePath(String fileName)
+    {
+        URL resource = Resources.getResource(fileName);
+        return resource.getPath();
 
     }
 
