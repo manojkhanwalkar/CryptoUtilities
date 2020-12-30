@@ -24,4 +24,7 @@ public class IdGenerator {
         return UUID.randomUUID().toString();
     }
 
+    public static void nextBytes(byte[] iv) {
+        secureRandom.nextBytes(iv);
+    }
 }
