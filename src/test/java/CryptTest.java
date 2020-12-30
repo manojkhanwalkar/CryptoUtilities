@@ -33,6 +33,11 @@ public class CryptTest {
 
         var privateKey1 = CryptUtil.convertStringtoPrivateKey(privateKeyStr,"EC");
 
+        String privateKeyFile  = filePath("blockrsakey.der");
+
+        var privateKey2 = CryptUtil.getPrivateKeyDerFromFile(privateKeyFile,"RSA");
+
+
     }
 
     @Test
@@ -72,36 +77,6 @@ public class CryptTest {
 
 
     }
-
-  /*
-     private static final String ALGO = "SHA256withECDSA";
-
-  PublicKey pub =  getPublicKey(extractPublicKeyFromFile("/home/manoj/IdeaProjects/phoenix/src/main/resources/idpcertificate.pem"));
-        PrivateKey priv = loadPrivateKey("/home/manoj/IdeaProjects/phoenix/src/main/resources/idpprivatekey.der");
-
-        String plainText = "Hello World from EC Public and Private keys";
-
-        Signature ecdsaSign = Signature.getInstance(ALGO);
-        ecdsaSign.initSign(priv);
-        ecdsaSign.update(plainText.getBytes("UTF-8"));
-        byte[] signature = ecdsaSign.sign();
-
-
-        Signature ecdsaVerify = Signature.getInstance(ALGO);
-
-        ecdsaVerify.initVerify(pub);
-        ecdsaVerify.update(plainText.getBytes("UTF-8"));
-        boolean result = ecdsaVerify.verify(signature);
-
-
-        System.out.println(result);*/
-
-        //TODO - tests for the CertUtil and CryptUtil classes
-
-        //TODO - convert JOSE4J usage to Nimbus library .
-
-
-
 
 
 
