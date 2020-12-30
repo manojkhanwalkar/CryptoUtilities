@@ -97,44 +97,6 @@ public class DHUtil {
     }
 
 
-    public String encryptJWE(String payload)
-    {
-        JsonWebEncryption jwe = new JsonWebEncryption();
-        jwe.setPayload(payload);
-        jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.A256KW);
-        jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_256_CBC_HMAC_SHA_512);
-        jwe.setKey(sessionKey);
-        String serializedJwe = null;
-        try {
-            serializedJwe = jwe.getCompactSerialization();
-        } catch (JoseException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Serialized Encrypted JWE: " + serializedJwe);
-        return serializedJwe;
-    }
-
-
-    public String decryptJWE(String serializedJwe)
-    {
-        JsonWebEncryption jwe = new JsonWebEncryption();
-        jwe.setAlgorithmConstraints(new org.jose4j.jwa.AlgorithmConstraints(org.jose4j.jwa.AlgorithmConstraints.ConstraintType.WHITELIST,
-                KeyManagementAlgorithmIdentifiers.A256KW));
-        jwe.setContentEncryptionAlgorithmConstraints(new org.jose4j.jwa.AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST,
-                ContentEncryptionAlgorithmIdentifiers.AES_256_CBC_HMAC_SHA_512));
-        jwe.setKey(sessionKey);
-        try {
-            jwe.setCompactSerialization(serializedJwe);
-            System.out.println("Payload: " + jwe.getPayload());
-
-            return jwe.getPayload();
-        } catch (JoseException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-
-    }
 
 
 
