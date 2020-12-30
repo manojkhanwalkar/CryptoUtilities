@@ -16,5 +16,3 @@ The utilities cover RSA/EC asymmetric keys as well as AES symmetric key.
 
 * https://jamielinux.com/docs/openssl-certificate-authority/sign-server-and-client-certificates.html  (tutorial to generate root , intermediate and leaf certificates.)
 * openssl pkcs8 -topk8 -inform PEM -outform DER -in private.pem -out private.der -nocrypt (openssl command to convert from pem to der format)
-
-Work in Progress 
