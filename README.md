@@ -10,6 +10,8 @@ The utilities cover RSA/EC asymmetric keys as well as AES symmetric key.
 * CertUtil - Additional utilities to convert certificate to base64 string and vice versa. This is useful when the cert needs to be sent to another service. 
 * CertChainValidator - utility function to validate a cert using a certificate chain. The cert presented should have been signed by the intermediate cert , which has been signed by the root CA. 
 * CryptUtil - utilities that deal with creating keys from file as well as encryption and decryption.
+* DHUtil - Functionality that supports exchange of keys using Diffie Hellman. 
+* SignUtil - Functionality to sign and verify a message. 
 # Useful links and commands 
 
 * https://jamielinux.com/docs/openssl-certificate-authority/sign-server-and-client-certificates.html  (tutorial to generate root , intermediate and leaf certificates.)
