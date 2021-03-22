@@ -26,8 +26,10 @@ The utilities cover RSA/EC asymmetric keys as well as AES symmetric key.
         6. This key will be used in the AEAD algorithm along with a Nonce for encrypting the actual messages between them. 
         7. The nonce will be appended at the end of the ciphertext and both sent together to the other party. 
         8. This enables the other party to extract the nonce and use it as input along with the symmetric key to decrypt the message. 
+        9. In step 1 Alice could also generate a second key pair and send an additional public key that Bob will be use to encrypt the secret that is sent back to Alice. 
 
 # Useful links and commands 
 
 * https://jamielinux.com/docs/openssl-certificate-authority/sign-server-and-client-certificates.html  (tutorial to generate root , intermediate and leaf certificates.)
 * openssl pkcs8 -topk8 -inform PEM -outform DER -in private.pem -out private.der -nocrypt (openssl command to convert from pem to der format)
+* AEAD example uses https://mkyong.com/java/java-11-chacha20-poly1305-encryption-examples/
