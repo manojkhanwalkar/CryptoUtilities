@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class AEAD {
 
-    private static final String ENCRYPT_ALGO = "ChaCha20-Poly1305";
+    public static final String ENCRYPT_ALGO = "ChaCha20-Poly1305";
     private static final int NONCE_LEN = 12; // 96 bits, 12 bytes
 
     // if no nonce, generate a random 12 bytes nonce
@@ -62,7 +62,7 @@ public class AEAD {
 
     private static ThreadLocalRandom random = ThreadLocalRandom.current();
     // 96-bit nonce (12 bytes)
-    private static byte[] getNonce() {
+    public static byte[] getNonce() {
         byte[] newNonce = new byte[12];
         random.nextBytes(newNonce);
         return newNonce;

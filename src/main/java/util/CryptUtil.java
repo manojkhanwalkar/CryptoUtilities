@@ -110,7 +110,6 @@ public class CryptUtil {
         return null;
     }
 
-    static SecureRandom secureRandom = new SecureRandom();
 
     public static SymKeyStringTuple encrypt(String message, PublicKey key, String keyType)
     {
