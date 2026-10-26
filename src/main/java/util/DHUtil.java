@@ -9,9 +9,10 @@ import org.jose4j.lang.JoseException;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyAgreement;
-import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.util.Arrays;
 import java.util.Base64;
@@ -29,7 +30,10 @@ public class DHUtil {
 
    // String ALGO = "AES";
 
-    String ALGO = "AES/CBC/PKCS5Padding";
+    // Authenticated encryption: AES-GCM detects tampering (CBC without a MAC did not).
+    // The IV passed to encrypt() must be unique for every message under the same session key.
+    String ALGO = "AES/GCM/NoPadding";
+    private static final int GCM_TAG_BITS = 128;
 
     //CertUtil  util = new CertUtil();
 
@@ -70,30 +74,30 @@ public class DHUtil {
 
     public  String encrypt(String msg, byte[] iv) {
         try {
-            IvParameterSpec ivSpec=new IvParameterSpec(iv);
+            GCMParameterSpec ivSpec = new GCMParameterSpec(GCM_TAG_BITS, iv);
 
             Cipher c = Cipher.getInstance(ALGO);
             c.init(Cipher.ENCRYPT_MODE, sessionKey, ivSpec);
-            byte[] encVal = c.doFinal(msg.getBytes());
+            byte[] encVal = c.doFinal(msg.getBytes(StandardCharsets.UTF_8));
             return new String(Base64.getEncoder().encode(encVal));
         } catch (Exception  e) {
-            e.printStackTrace();
+            // Fail closed: never hand back the plaintext as if it had been encrypted.
+            throw new IllegalStateException("encryption failed", e);
         }
-        return msg;
     }
 
     public  String decrypt(String encryptedData, String iv) {
         try {
-            IvParameterSpec ivSpec=new IvParameterSpec(Base64.getDecoder().decode(iv));
+            GCMParameterSpec ivSpec = new GCMParameterSpec(GCM_TAG_BITS, Base64.getDecoder().decode(iv));
             Cipher c = Cipher.getInstance(ALGO);
             c.init(Cipher.DECRYPT_MODE, sessionKey,ivSpec);
             byte[] decordedValue = Base64.getDecoder().decode(encryptedData);
             byte[] decValue = c.doFinal(decordedValue);
-            return new String(decValue);
+            return new String(decValue, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            e.printStackTrace();
+            // Fail closed: do not return unauthenticated input as if it were decrypted plaintext.
+            throw new IllegalStateException("decryption failed", e);
         }
-        return encryptedData;
     }
 
 

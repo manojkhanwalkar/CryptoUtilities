@@ -84,9 +84,9 @@ public class HPKEUtil {
 
             return new String(Base64.getEncoder().encode(encVal));
         } catch (Exception  e) {
-            e.printStackTrace();
+            // Fail closed: never hand back the plaintext as if it had been encrypted.
+            throw new IllegalStateException("encryption failed", e);
         }
-        return msg;
     }
 
     public  String decrypt(String encryptedData, String iv) {
@@ -96,11 +96,11 @@ public class HPKEUtil {
             byte[] decordedValue = Base64.getDecoder().decode(encryptedData);
             var decValue = cipher.decrypt(decordedValue,sessionKey);
 
-            return new String(decValue);
+            return new String(decValue, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            e.printStackTrace();
+            // Fail closed: do not return unauthenticated input as if it were decrypted plaintext.
+            throw new IllegalStateException("decryption failed", e);
         }
-        return encryptedData;
     }
 
 
