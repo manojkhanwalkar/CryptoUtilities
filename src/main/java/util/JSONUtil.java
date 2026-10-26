@@ -17,7 +17,8 @@ public class JSONUtil {
 
     static {
         mapper.registerModule(new JavaTimeModule());
-        mapper.enableDefaultTyping();
+        // Global default typing (enableDefaultTyping) is deliberately NOT enabled: it lets JSON input
+        // choose arbitrary classes to instantiate, which enables deserialization gadget attacks.
         mapper.configure(MapperFeature.USE_GETTERS_AS_SETTERS, false);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 

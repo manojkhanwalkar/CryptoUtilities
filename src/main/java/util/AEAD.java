@@ -5,12 +5,12 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class AEAD {
 
     public static final String ENCRYPT_ALGO = "ChaCha20-Poly1305";
     private static final int NONCE_LEN = 12; // 96 bits, 12 bytes
+    private static final int MAC_LEN = 16;   // Poly1305 tag, 16 bytes
 
     // if no nonce, generate a random 12 bytes nonce
     public byte[] encrypt(byte[] pText, SecretKey key) throws Exception {
@@ -21,7 +21,11 @@ public class AEAD {
 
         Cipher cipher = Cipher.getInstance(ENCRYPT_ALGO);
 
-        // IV, initialization value with nonce
+        if (nonce == null || nonce.length != NONCE_LEN) {
+            throw new IllegalArgumentException("nonce must be " + NONCE_LEN + " bytes");
+        }
+
+        // IV, initialization value with nonce. A nonce must never be reused with the same key.
         IvParameterSpec iv = new IvParameterSpec(nonce);
 
         cipher.init(Cipher.ENCRYPT_MODE, key, iv);
@@ -38,6 +42,10 @@ public class AEAD {
     }
 
     public byte[] decrypt(byte[] cText, SecretKey key) throws Exception {
+
+        if (cText == null || cText.length < NONCE_LEN + MAC_LEN) {
+            throw new IllegalArgumentException("ciphertext too short");
+        }
 
         ByteBuffer bb = ByteBuffer.wrap(cText);
 
@@ -60,10 +68,11 @@ public class AEAD {
 
     }
 
-    private static ThreadLocalRandom random = ThreadLocalRandom.current();
+    // Nonces must be unpredictable and unique per key, so they come from a CSPRNG.
+    private static final SecureRandom random = new SecureRandom();
     // 96-bit nonce (12 bytes)
     public static byte[] getNonce() {
-        byte[] newNonce = new byte[12];
+        byte[] newNonce = new byte[NONCE_LEN];
         random.nextBytes(newNonce);
         return newNonce;
     }
