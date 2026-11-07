@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
@@ -59,24 +60,33 @@ public class HMACUtil {
     public static boolean isValid(String hmac , String data , String key)
     {
 
-        return hmac.equals(calculateHMAC(data,key));
+        return constantTimeEquals(hmac, calculateHMAC(data,key));
 
     }
 
     public static boolean isValid(String hmac , Object data , Object key) throws IOException
     {
 
-        return hmac.equals(calculateHMAC(data,key));
+        return constantTimeEquals(hmac, calculateHMAC(data,key));
 
     }
 
     public static boolean isValid(String hmac , byte[] data , byte[] key)
     {
 
-        return hmac.equals(calculateHMAC(data,key));
+        return constantTimeEquals(hmac, calculateHMAC(data,key));
 
     }
 
+
+    // Compare MACs in constant time so the comparison does not leak how many leading bytes match.
+    private static boolean constantTimeEquals(String expected, String actual)
+    {
+        if (expected == null || actual == null) {
+            return false;
+        }
+        return MessageDigest.isEqual(expected.getBytes(StandardCharsets.UTF_8), actual.getBytes(StandardCharsets.UTF_8));
+    }
 
     public static void main(String[] args) throws Exception {
         String hmac = calculateHMAC("data", "key");

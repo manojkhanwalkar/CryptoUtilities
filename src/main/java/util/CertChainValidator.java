@@ -106,7 +106,14 @@ public class CertChainValidator {
     public boolean validate(String leafCertStr)
     {
 
-        X509Certificate leafCert = CertUtil.getCertificate(leafCertStr);
+        return validate(CertUtil.getCertificate(leafCertStr));
+    }
+
+    public boolean validate(X509Certificate leafCert)
+    {
+        if (leafCert == null || rootCert == null || interCert == null) {
+            return false;
+        }
         try {
             return validateKeyChain(leafCert,interCert,rootCert);
         } catch (CertificateException e) {

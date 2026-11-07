@@ -42,7 +42,7 @@ public class CertificateCreatorUtil {
         Date startDate = new Date(now);
 
         X500Name dnName = new X500Name(subjectDN);
-        BigInteger certSerialNumber = new BigInteger(Long.toString(System.nanoTime())); // Using the current time as the certificate serial number
+        BigInteger certSerialNumber = new BigInteger(159, new SecureRandom()); // random positive serial (CA/B Forum: >= 64 bits of entropy)
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startDate);

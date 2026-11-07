@@ -10,9 +10,9 @@ The utilities cover RSA/EC asymmetric keys as well as AES symmetric key.
 * **CertificateCreatorUtil** - creates a X509 certificate programatically. Takes in a KeyPair and uses that to self sign the certificate. 
 * **CertUtil** - Additional utilities to convert certificate to base64 string and vice versa. This is useful when the cert needs to be sent to another service. 
 * **CertChainValidator** - utility function to validate a cert using a certificate chain. The cert presented should have been signed by the intermediate cert , which has been signed by the root CA. 
-* **CryptUtil** - utilities that deal with creating keys from file as well as encryption and decryption.
-* **DHUtil** - Functionality that supports exchange of keys using Diffie Hellman. 
-* **SignUtil** - Functionality to sign and verify a message. 
+* **CryptUtil** - utilities that deal with creating keys from file as well as encryption and decryption. Messages are encrypted with AES-256-GCM (output is IV || ciphertext+tag) and an `"RSA"` key type wraps the AES key with RSA-OAEP (SHA-256).
+* **DHUtil** - Functionality that supports exchange of keys using Diffie Hellman. Messages use AES-GCM; the IV passed to `encrypt` must be unique per message. `encrypt`/`decrypt` throw `IllegalStateException` on failure.
+* **SignUtil** - Functionality to sign and verify a message. Verify with `verify(container, message, trustedPublicKey)` or `verify(container, message, certChainValidator)`; the two-argument `verify` trusts whatever certificate is inside the container and is deprecated.
 * **HPKEUtil** - Utilities that perform the three steps in a Hybrid Public Key EncryptionScheme. 
     1. KEM - Key Encapsulation Mechanism 
     2. KDF - Key Derivation Function
