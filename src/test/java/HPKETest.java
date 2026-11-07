@@ -1,4 +1,3 @@
-import lombok.SneakyThrows;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.KeyAgreementSpi;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Test;
@@ -7,6 +6,7 @@ import util.HPKEUtil;
 import util.IdGenerator;
 
 import javax.crypto.Cipher;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.util.Base64;
 
@@ -20,26 +20,26 @@ public class HPKETest {
         Security.addProvider(new BouncyCastleProvider());
     }
 
-    @SneakyThrows
     public static String encrypt(String message , Key secKey)
     {
-        Cipher cipher =  Cipher.getInstance("ECIES","BC");
-        cipher.init(Cipher.ENCRYPT_MODE, secKey);
-        String encryptedMessage = Base64.getEncoder().encodeToString(cipher.doFinal(message.getBytes("UTF-8")));
-
-        return encryptedMessage;
-
+        try {
+            Cipher cipher =  Cipher.getInstance("ECIES","BC");
+            cipher.init(Cipher.ENCRYPT_MODE, secKey);
+            return Base64.getEncoder().encodeToString(cipher.doFinal(message.getBytes(StandardCharsets.UTF_8)));
+        } catch (GeneralSecurityException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
-    @SneakyThrows
     public static String decrypt(String message , Key secKey)
     {
-        Cipher aesCipher = Cipher.getInstance("ECIES","BC");
-        aesCipher.init(Cipher.DECRYPT_MODE, secKey);
-        byte[] bytePlainText = aesCipher.doFinal(Base64.getDecoder().decode(message));
-        String plainText = new String(bytePlainText);
-
-        return plainText;
+        try {
+            Cipher aesCipher = Cipher.getInstance("ECIES","BC");
+            aesCipher.init(Cipher.DECRYPT_MODE, secKey);
+            return new String(aesCipher.doFinal(Base64.getDecoder().decode(message)), StandardCharsets.UTF_8);
+        } catch (GeneralSecurityException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     @Test
